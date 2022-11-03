@@ -1,5 +1,5 @@
 from django.template.defaultfilters import first
-from rest_framework import generics, request
+from rest_framework import generics, request, mixins, viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 
@@ -14,56 +14,36 @@ class APIListPagination(PageNumberPagination):
     max_page_size = 20
 
 
-class AdminDisciplineAPIList(generics.ListCreateAPIView):
+class AdminDisciplineAPIListDetail(
+    viewsets.ModelViewSet
+):
     queryset = Discipline.objects.all()
     serializer_class = AdminDisciplineSerializer
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = APIListPagination
 
 
-class AdminDisciplineAPIDetail(generics.RetrieveUpdateAPIView):
-    queryset = Discipline.objects.all()
-    serializer_class = AdminDisciplineSerializer
-    permission_classes = (IsAdminOrReadOnly,)
-    pagination_class = APIListPagination
-
-
-class AdminDirectionAPIList(generics.ListCreateAPIView):
+class AdminDirectionAPIListDetail(
+    viewsets.ModelViewSet,
+):
     queryset = Direction.objects.all()
     serializer_class = AdminDirectionSerializer
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = APIListPagination
 
 
-class AdminDirectionAPIDetail(generics.RetrieveUpdateAPIView):
-    queryset = Direction.objects.all()
-    serializer_class = AdminDirectionSerializer
-    permission_classes = (IsAdminOrReadOnly,)
-    pagination_class = APIListPagination
-
-
-class CuratorStudentsAPIList(generics.ListCreateAPIView):
+class CuratorStudentsAPIListDetail(
+    viewsets.ModelViewSet
+):
     queryset = Students.objects.all()
     serializer_class = CuratorStudentsSerializer
     permission_classes = (IsOwnerOrReadOnly,)
     pagination_class = APIListPagination
 
 
-class CuratorStudentsAPIDetail(generics.RetrieveUpdateAPIView):
-    queryset = Students.objects.all()
-    serializer_class = CuratorStudentsSerializer
-    permission_classes = (IsOwnerOrReadOnly,)
-    pagination_class = APIListPagination
-
-
-class CuratorGroupsAPIList(generics.ListCreateAPIView):
-    queryset = Groups.objects.all()
-    serializer_class = CuratorGroupsSerializer
-    permission_classes = (IsOwnerOrReadOnly,)
-    pagination_class = APIListPagination
-
-
-class CuratorGroupsAPIDetail(generics.RetrieveUpdateAPIView):
+class CuratorGroupsAPIListDetail(
+    viewsets.ModelViewSet
+):
     queryset = Groups.objects.all()
     serializer_class = CuratorGroupsSerializer
     permission_classes = (IsOwnerOrReadOnly,)
