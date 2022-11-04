@@ -35,3 +35,11 @@ class AdminDirectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Direction
         fields = "__all__"
+
+
+class CuratorSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = Curator
+        fields = "__all__"

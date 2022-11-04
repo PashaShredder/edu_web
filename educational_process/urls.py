@@ -11,6 +11,7 @@ router.register(r'disciplines', views.AdminDisciplineAPIListDetail)
 router.register(r'directions', views.AdminDirectionAPIListDetail)
 router.register(r'students', views.CuratorStudentsAPIListDetail)
 router.register(r'groups', views.CuratorGroupsAPIListDetail)
+router.register(r'curator', views.CuratorAPIListDetail)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -35,7 +35,7 @@ class AdminDirectionAPIListDetail(
 class CuratorStudentsAPIListDetail(
     viewsets.ModelViewSet
 ):
-    queryset = Students.objects.all()
+    queryset = Students.objects.filter(gender='M').order_by("id")
     serializer_class = CuratorStudentsSerializer
     permission_classes = (IsOwnerOrReadOnly,)
     pagination_class = APIListPagination
@@ -47,4 +47,13 @@ class CuratorGroupsAPIListDetail(
     queryset = Groups.objects.all()
     serializer_class = CuratorGroupsSerializer
     permission_classes = (IsOwnerOrReadOnly,)
+    pagination_class = APIListPagination
+
+
+class CuratorAPIListDetail(
+    viewsets.ModelViewSet
+):
+    queryset = Curator.objects.all()
+    serializer_class = CuratorSerializer
+    permission_classes = (IsAdminOrReadOnly,)
     pagination_class = APIListPagination
