@@ -14,4 +14,4 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        return obj.direction.curator.user == request.user
+        return obj.curator.user == request.user

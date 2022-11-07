@@ -1,11 +1,16 @@
+from rest_framework_recursive.fields import RecursiveField
 from rest_framework import serializers
-from rest_framework.parsers import JSONParser
-from rest_framework.renderers import JSONRenderer
 
-from edu_web.models import *
+from edu_web.models import Students, Groups, Discipline, Direction, Curator
 
 
-class CuratorStudentsSerializer(serializers.ModelSerializer):
+class CuratorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Curator
+        fields = ('first_name', 'middle_name', 'last_name')
+
+
+class StudentsSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
@@ -13,33 +18,57 @@ class CuratorStudentsSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class CuratorGroupsSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+class GroupsSerializer(serializers.ModelSerializer):
+    # num_student = serializers.IntegerField()
+    # num_student_f = serializers.IntegerField()
+    # num_student_m = serializers.IntegerField()
+    name = serializers.CharField()
+    student = serializers.SlugRelatedField(slug_field='first_name', read_only=True, many=True)
+    group = serializers.SlugRelatedField(slug_field='name', read_only=True, many=True)
 
     class Meta:
         model = Groups
-        fields = "__all__"
+        fields = ('curator', 'curator_id', 'group', 'id',
+                  'max_number_students', 'num_groups', 'student',
+                  # 'num_student', 'num_student_f', 'num_student_m',
+                  'name',)
 
 
-class AdminDisciplineSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+class RepGroupsSerializer(serializers.ModelSerializer):
+    free_place = serializers.IntegerField()
+    num_student = serializers.IntegerField()
+    num_student_f = serializers.IntegerField()
+    num_student_m = serializers.IntegerField()
+    name = serializers.CharField()
+    curator = CuratorSerializer(read_only=True)
+
+    student = serializers.SlugRelatedField(slug_field='first_name', read_only=True, many=True)
+    group = serializers.SlugRelatedField(slug_field='name', read_only=True, many=True)
 
     class Meta:
-        model = Discipline
-        fields = "__all__"
+        model = Groups
+        fields = ('curator', 'curator_id', 'group', 'id',
+                  'max_number_students', 'num_groups', 'student',
+                  'num_student', 'num_student_f', 'num_student_m',
+                  'name', 'free_place')
 
 
-class AdminDirectionSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-
+class DirectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Direction
         fields = "__all__"
 
 
-class CuratorSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+class DisciplineSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Discipline
+        fields = '__all__'
+
+
+class RepDirectionSerializer(serializers.ModelSerializer):
+    discipline = DisciplineSerializer(read_only=True, many=True)
+    curator = CuratorSerializer(read_only=True)
 
     class Meta:
-        model = Curator
-        fields = "__all__"
+        model = Direction
+        fields = ("id", "name_dir", "curator", "discipline",)

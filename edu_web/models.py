@@ -38,7 +38,7 @@ class Direction(models.Model):
 
 
 class Groups(models.Model):
-    group_name = models.CharField(max_length=150)
+    name = models.CharField(max_length=150)
     num_groups = models.CharField(max_length=15, validators=[NUMBER_REGEX])
     max_number_students = models.IntegerField(
         default=20,
@@ -48,10 +48,10 @@ class Groups(models.Model):
     curator = models.ForeignKey(
         Curator,
         on_delete=models.CASCADE,
-        related_name='Groups')
+        related_name='Group')
 
     def __str__(self):
-        return self.group_name
+        return self.name
 
 
 class Students(models.Model):
@@ -71,7 +71,7 @@ class Students(models.Model):
     group = models.ForeignKey(
         Groups,
         on_delete=models.CASCADE,
-        related_name='Students')
+        related_name='student')
 
     def __str__(self):
         return f'{self.first_name} {self.middle_name} {self.last_name}'
@@ -82,7 +82,7 @@ class Discipline(models.Model):
     direction = models.ForeignKey(
         Direction,
         on_delete=models.CASCADE,
-        related_name='Discipline')
+        related_name='discipline')
 
     def __str__(self):
         return f'{self.name_dis}'

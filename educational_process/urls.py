@@ -7,11 +7,14 @@ from edu_web import views
 
 
 router = routers.SimpleRouter()
-router.register(r'disciplines', views.AdminDisciplineAPIListDetail)
-router.register(r'directions', views.AdminDirectionAPIListDetail)
-router.register(r'students', views.CuratorStudentsAPIListDetail)
-router.register(r'groups', views.CuratorGroupsAPIListDetail)
+router.register(r'disciplines', views.DisciplineAPIListDetail)
+router.register(r'directions', views.DirectionAPIListDetail)
+router.register(r'students', views.StudentsAPIListDetail)
+router.register(r'groups', views.GroupsAPIListDetail)
 router.register(r'curator', views.CuratorAPIListDetail)
+router.register(r'rep-group', views.RepGroupsAPIListDetail)
+router.register(r'rep-dir', views.RepDirectionAPIListDetail)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
