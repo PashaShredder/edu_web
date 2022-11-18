@@ -1,5 +1,13 @@
+from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator, RegexValidator
+
 from django.db import models
+from django.db.models import FileField
+from edu_web.tasks import report_create
+
+
+
+
 
 NUMBER_REGEX = RegexValidator(r'^[a-zA-Z0-9]*$', 'Разрешены только буквенно-цифровые символы')
 PHONE_REGEX = RegexValidator(r'^\+?7?\d{9,15}$', "Номер телефона необходимо вводить в формате "
@@ -7,9 +15,9 @@ PHONE_REGEX = RegexValidator(r'^\+?7?\d{9,15}$', "Номер телефона н
 
 
 class Curator(models.Model):
-    first_name = models.CharField(max_length=150)
-    middle_name = models.CharField(max_length=150)
-    last_name = models.CharField(max_length=150)
+    first_name = models.CharField(max_length=150, verbose_name='Фамилия')
+    middle_name = models.CharField(max_length=150, verbose_name='Имя')
+    last_name = models.CharField(max_length=150, verbose_name='Отчество')
     phone_number = models.CharField(
         max_length=16,
         blank=False,
@@ -19,7 +27,7 @@ class Curator(models.Model):
 
     )
     mail_address = models.EmailField(blank=True)
-
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='curator', blank=True)
     def __str__(self):
         return f'{self.first_name} {self.middle_name} {self.last_name}'
 
@@ -31,7 +39,7 @@ class Direction(models.Model):
     curator = models.ForeignKey(
         Curator,
         related_name='Direction',
-        on_delete=models.CASCADE)
+        on_delete=models.CASCADE, )
 
     def __str__(self):
         return f'{self.name_dir}'
@@ -86,3 +94,29 @@ class Discipline(models.Model):
 
     def __str__(self):
         return f'{self.name_dis}'
+
+
+class MyReport(models.Model):
+    NOT_STARTED = 0
+    DURING = 1
+    DONE = 2
+    PROCESS_CHOICES = (
+        (NOT_STARTED, 'not_started'),
+        (DURING, 'during'),
+        (DONE, 'done'),
+    )
+    file_name = models.CharField(max_length=150, verbose_name='Имя отчёта')
+    datatime_created = models.DateTimeField(auto_now_add=True, )
+    rep_status = models.IntegerField(default=NOT_STARTED, choices=PROCESS_CHOICES)
+
+    def __str__(self):
+        return f'{self.file_name}'
+
+
+    def save(self, *args, **kwargs):
+        if self.pk is None:
+            super().save()
+            report_id = self.pk
+            report_create.delay(report_id)
+        else:
+            super().save()

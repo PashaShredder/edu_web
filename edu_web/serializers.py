@@ -34,23 +34,6 @@ class GroupsSerializer(serializers.ModelSerializer):
                   'name',)
 
 
-class RepGroupsSerializer(serializers.ModelSerializer):
-    free_place = serializers.IntegerField()
-    num_student = serializers.IntegerField()
-    num_student_f = serializers.IntegerField()
-    num_student_m = serializers.IntegerField()
-    name = serializers.CharField()
-    curator = CuratorSerializer(read_only=True)
-
-    student = serializers.SlugRelatedField(slug_field='first_name', read_only=True, many=True)
-    group = serializers.SlugRelatedField(slug_field='name', read_only=True, many=True)
-
-    class Meta:
-        model = Groups
-        fields = ('curator', 'curator_id', 'group', 'id',
-                  'max_number_students', 'num_groups', 'student',
-                  'num_student', 'num_student_f', 'num_student_m',
-                  'name', 'free_place')
 
 
 class DirectionSerializer(serializers.ModelSerializer):
@@ -72,3 +55,21 @@ class RepDirectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Direction
         fields = ("id", "name_dir", "curator", "discipline",)
+
+class RepGroupsSerializer(serializers.ModelSerializer):
+    free_place = serializers.IntegerField()
+    num_student = serializers.IntegerField()
+    num_student_f = serializers.IntegerField()
+    num_student_m = serializers.IntegerField()
+    name = serializers.CharField()
+    curator = CuratorSerializer(read_only=True)
+
+    student = serializers.SlugRelatedField(slug_field='first_name', read_only=True, many=True)
+    group = serializers.SlugRelatedField(slug_field='name', read_only=True, many=True)
+
+    class Meta:
+        model = Groups
+        fields = ('curator', 'curator_id', 'group', 'id',
+                  'max_number_students', 'num_groups', 'student',
+                  'num_student', 'num_student_f', 'num_student_m',
+                  'name', 'free_place')
