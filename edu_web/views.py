@@ -1,3 +1,4 @@
+from time import sleep
 from turtle import delay
 
 from django.db.models import Count, Q
@@ -8,7 +9,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from rest_framework.response import Response
 
 from edu_web.permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
-from edu_web.models import Discipline, Direction, Students, Groups, Curator
+from edu_web.models import Discipline, Direction, Students, Groups, Curator, MyReport
 from edu_web.serializers import DisciplineSerializer, DirectionSerializer, CuratorSerializer, StudentsSerializer, \
     GroupsSerializer, RepGroupsSerializer, RepDirectionSerializer
 from edu_web.tasks import report_create
@@ -85,11 +86,12 @@ class RepDirectionAPIListDetail(
 ):
     queryset = Direction.objects.all()
     serializer_class = RepDirectionSerializer
-    permission_classes = (IsOwnerOrReadOnly,)
+    permission_classes = (IsAdminOrReadOnly,)
     pagination_class = APIListPagination
 
 
 @api_view(["GET",])
 def hello_world(request):
     report_create.delay()
+    sleep(2)
     return Response({"message": "Hello, world!"})

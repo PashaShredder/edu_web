@@ -57,6 +57,11 @@ class Groups(models.Model):
         Curator,
         on_delete=models.CASCADE,
         related_name='Group')
+    disciplines = models.ManyToManyField(
+        "Discipline",
+        related_name='groups',
+        verbose_name='Изучаемые дисциплины'
+    )
 
     def __str__(self):
         return self.name
