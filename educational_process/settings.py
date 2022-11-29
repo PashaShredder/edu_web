@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'edu_web.apps.EduWebConfig',
     'rest_framework',
+    'debug_toolbar',
 
 
 ]
@@ -38,6 +39,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+]
+
+INTERNAL_IPS = [
+        "127.0.0.1",
 ]
 
 ROOT_URLCONF = 'educational_process.urls'
@@ -66,7 +72,7 @@ WSGI_APPLICATION = 'educational_process.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'studyedua',
+        'NAME': 'studyedu',
         'USER': 'admin',
         'PASSWORD': 'admin',
         'HOST': 'localhost',

@@ -16,7 +16,6 @@ router.register(r'groups', views.GroupsAPIListDetail)
 router.register(r'curator', views.CuratorAPIListDetail)
 router.register(r'rep-group', views.RepGroupsAPIListDetail)
 router.register(r'rep-dir', views.RepDirectionAPIListDetail)
-# router.register(r'api/rep/', views.hello_world, basename='rep')
 
 
 
@@ -28,4 +27,6 @@ urlpatterns = [
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += [
     path('api/', include(router.urls)),
+    path('__debug__/', include('debug_toolbar.urls')),
+
 ]

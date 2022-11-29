@@ -27,7 +27,7 @@ class Curator(models.Model):
 
     )
     mail_address = models.EmailField(blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='curator', blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='permcurator', blank=True)
     def __str__(self):
         return f'{self.first_name} {self.middle_name} {self.last_name}'
 
@@ -38,7 +38,7 @@ class Direction(models.Model):
         verbose_name='Направление')
     curator = models.ForeignKey(
         Curator,
-        related_name='Direction',
+        related_name='curatordirections',
         on_delete=models.CASCADE, )
 
     def __str__(self):
@@ -56,15 +56,18 @@ class Groups(models.Model):
     curator = models.ForeignKey(
         Curator,
         on_delete=models.CASCADE,
-        related_name='Group')
+        related_name='curatorgroups')
     disciplines = models.ManyToManyField(
         "Discipline",
-        related_name='groups',
+        related_name='groupsdisciplines',
         verbose_name='Изучаемые дисциплины'
     )
 
+
+
     def __str__(self):
         return self.name
+
 
 
 class Students(models.Model):
@@ -84,8 +87,10 @@ class Students(models.Model):
     group = models.ForeignKey(
         Groups,
         on_delete=models.CASCADE,
-        related_name='student')
+        related_name='studygroup')
 
+    class Meta:
+        ordering = ['first_name', ]
     def __str__(self):
         return f'{self.first_name} {self.middle_name} {self.last_name}'
 
@@ -95,7 +100,7 @@ class Discipline(models.Model):
     direction = models.ForeignKey(
         Direction,
         on_delete=models.CASCADE,
-        related_name='discipline')
+        related_name='directiondisciplines')
 
     def __str__(self):
         return f'{self.name_dis}'

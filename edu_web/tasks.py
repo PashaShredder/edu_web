@@ -12,10 +12,10 @@ logger = get_task_logger(__name__)
 #     result = b + c
 #     return result
 @app.task(bind=True)
-def report_create(*args, **kwargs, ):
+def report_create(*args, **kwargs,):
     logger.info('Проверка')
     logger.info(str(kwargs) + str(args))
-    from edu_web.models import Direction, Discipline, Curator, Students
+    from edu_web.models import Students
     from edu_web.models import MyReport
     task = MyReport.objects.get()
     task.rep_status = 0
@@ -23,14 +23,18 @@ def report_create(*args, **kwargs, ):
     queryset = Students.objects.select_related('group__curator'). \
         prefetch_related('group__disciplines__direction')
     print(queryset)
-    file_name = 'report.xlsx'
+    file_name = 'report.txt'
     for student in queryset:
-        print(student, student.group, student.group.curator,)
+        print(student, student.group, student.group.curator, )
         for discipline in student.group.disciplines.all():
             print(discipline, discipline.direction)
-    # with open(file_name, 'w') as f:
-    #     for d in queryset:
-    #         print(d, file=f)
+    with open(file_name, 'w', ) as f:
+        for student in queryset:
+            print(student, student.group, student.group.curator, file=f)
+            for discipline in student.group.disciplines.all():
+                print(discipline, discipline.direction, file=f)
+        # for d in queryset:
+        #     print(d, file=f)
     # for u in discipline_queryset:
     #     print(u.name_dis, file=f)
     # for c in curator_queryset:
