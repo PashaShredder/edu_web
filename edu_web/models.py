@@ -62,6 +62,12 @@ class Groups(models.Model):
         related_name='groupsdisciplines',
         verbose_name='Изучаемые дисциплины'
     )
+    direction = models.ForeignKey(
+        Direction,
+        on_delete=models.CASCADE,
+        related_name='groupsdirection',
+        verbose_name='Изучаемые дисциплины'
+    )
 
 
 

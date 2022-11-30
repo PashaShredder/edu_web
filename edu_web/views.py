@@ -80,23 +80,21 @@ class GroupsAPIListDetail(
 class RepGroupsAPIListDetail(
     viewsets.ModelViewSet
 ):
-    queryset = Groups.objects.select_related('curator__user').\
-        prefetch_related('disciplines__direction').annotate(
+    queryset = Groups.objects.select_related('direction__curator').\
+        annotate(
         free_place=20 - Count('studygroup'),
         num_student=Count('studygroup'),
         num_student_f=Count('studygroup', filter=Q(studygroup__gender='F')),
         num_student_m=Count('studygroup', filter=Q(studygroup__gender='M')),)
 
-    print(queryset)
-
     serializer_class = RepGroupsSerializer
-    permission_classes = (IsAdminOrReadOnly, IsCuratorOrReadOnly,)
+    permission_classes = (IsAdminOrReadOnly,)
     pagination_class = APIListPagination
 
 class RepDirectionAPIListDetail(
     viewsets.ModelViewSet,
 ):
-    queryset = Direction.objects.all()
+    queryset = Direction.objects.prefetch_related('curator__user')
     serializer_class = RepDirectionSerializer
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = APIListPagination
