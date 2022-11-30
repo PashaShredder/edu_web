@@ -77,6 +77,7 @@ class GroupsAPIListDetail(
 #     pagination_class = APIListPagination
 
 
+
 class RepGroupsAPIListDetail(
     viewsets.ModelViewSet
 ):

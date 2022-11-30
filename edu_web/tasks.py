@@ -25,13 +25,13 @@ def report_create(*args, **kwargs,):
     print(queryset)
     file_name = 'report.txt'
     for student in queryset:
-        print(student, student.group, student.group.curator, )
+        print(student, student.group, student.group.curator, ) #печатаешь то куратора группы а надо куратора направления группы
         for discipline in student.group.disciplines.all():
             print(discipline, discipline.direction)
     with open(file_name, 'w', ) as f:
         for student in queryset:
             print(student, student.group, student.group.curator, file=f)
-            for discipline in student.group.disciplines.all():
+            for discipline in student.group.disciplines.all(): #кто тебе сказал что у группы есть дисциплины
                 print(discipline, discipline.direction, file=f)
         # for d in queryset:
         #     print(d, file=f)
