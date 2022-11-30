@@ -50,13 +50,24 @@ class Groups(models.Model):
     num_groups = models.CharField(max_length=15, validators=[NUMBER_REGEX])
     max_number_students = models.IntegerField(
         default=20,
+        #TODO:
+        # а это что такое, ограничиваешь то каким куратор может поставить ограничение на кол-во человек в группе?
+        # если в админке тут цифорку сменить то с студентами ничего не произойдет, но куратор не можеть сделать ограничение больше 20
+        # имхо 20 дефаулт норм, а так если в будущем решат что можно и 50 то придется делать миграции для снятия валидаторов
         validators=[MaxValueValidator(20), MinValueValidator(1)],
         help_text='Количество студентов в группе не может быть меньше 1-го и больше 20-ти',
     )
+    #TODO это нам не надо ибо у нас куратора можно получить через направление
+    # то есть данные в этой связи излишни и путают, могут отличаться и приводить к ошибкам
+    # если ты укажешь здесь другого куратора то никакой волшебник на вертолете не прилетит и не отправит запись к тому направлению где этот куратор
+
     curator = models.ForeignKey(
         Curator,
         on_delete=models.CASCADE,
         related_name='curatorgroups')
+
+    #TODO это нам не тоже не надо ибо у нас в задании сказали дисциплину создать и не трогать
+    # кто знает может это дисциплина куратора из его резюме для рекламного куплета училища и к студентам не относится
     disciplines = models.ManyToManyField(
         "Discipline",
         related_name='groupsdisciplines',
@@ -65,7 +76,7 @@ class Groups(models.Model):
     direction = models.ForeignKey(
         Direction,
         on_delete=models.CASCADE,
-        related_name='groupsdirection',
+        related_name='groupsdirection', #пошто так сложно, можно же просто group
         verbose_name='Изучаемые дисциплины'
     )
 
@@ -87,13 +98,16 @@ class Students(models.Model):
     gender = models.CharField(
         max_length=1,
         choices=GENDER_CHOICES,
-        default="None",
+        default="None", #что за по умолчанию "None" у тебя такого в чоисах нет, добавь туда тогда это чтоли
         verbose_name='Пол'
+        # либо добавь blank=True для пустой строки
+        # либо null=True чтоб можно было прям None туда запихнуть без ковычек
+        #кстати "None" это 4 символа что нарушает твои ограничения длинны
     )
     group = models.ForeignKey(
         Groups,
         on_delete=models.CASCADE,
-        related_name='studygroup')
+        related_name='studygroup')# опять релейтеднейм непонятный, ты же группе кто? студент или ученик, так и напиши или на худой конец groupstudent
 
     class Meta:
         ordering = ['first_name', ]
@@ -106,7 +120,7 @@ class Discipline(models.Model):
     direction = models.ForeignKey(
         Direction,
         on_delete=models.CASCADE,
-        related_name='directiondisciplines')
+        related_name='directiondisciplines') #ну эт еще пойдет
 
     def __str__(self):
         return f'{self.name_dis}'
