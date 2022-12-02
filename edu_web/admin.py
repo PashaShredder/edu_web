@@ -6,6 +6,10 @@ class DirectionAdmin(admin.ModelAdmin):
     list_display = ('id', 'name_dir', 'curator')
     list_display_links = ('name_dir', 'curator')
 
+class GroupsAdmin(admin.ModelAdmin):
+    list_display = ('id', 'group_name',)
+
+
 
 class MyReportAdmin(admin.ModelAdmin):
     list_display = ('id', 'file_name', 'datatime_created', 'rep_status', )
@@ -26,7 +30,7 @@ class StudentsAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Students, StudentsAdmin)
-admin.site.register(Groups)
+admin.site.register(Groups, GroupsAdmin)
 admin.site.register(Curator, CuratorAdmin)
 admin.site.register(Discipline)
 admin.site.register(Direction, DirectionAdmin)

@@ -1,8 +1,6 @@
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator, RegexValidator
-
 from django.db import models
-from django.db.models import FileField
 from edu_web.tasks import report_create
 
 
@@ -15,9 +13,18 @@ PHONE_REGEX = RegexValidator(r'^\+?7?\d{9,15}$', "Номер телефона н
 
 
 class Curator(models.Model):
-    first_name = models.CharField(max_length=150, verbose_name='Фамилия')
-    middle_name = models.CharField(max_length=150, verbose_name='Имя')
-    last_name = models.CharField(max_length=150, verbose_name='Отчество')
+    first_name = models.CharField(
+        max_length=150,
+        verbose_name='Фамилия',
+    )
+    middle_name = models.CharField(
+        max_length=150,
+        verbose_name='Имя',
+    )
+    last_name = models.CharField(
+        max_length=150,
+        verbose_name='Отчество',
+    )
     phone_number = models.CharField(
         max_length=16,
         blank=False,
@@ -27,7 +34,12 @@ class Curator(models.Model):
 
     )
     mail_address = models.EmailField(blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='permcurator', blank=True)
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='curatoruser',
+        blank=True,
+    )
     def __str__(self):
         return f'{self.first_name} {self.middle_name} {self.last_name}'
 
@@ -35,44 +47,44 @@ class Curator(models.Model):
 class Direction(models.Model):
     name_dir = models.CharField(
         max_length=150,
-        verbose_name='Направление')
+        verbose_name='Направление',
+    )
     curator = models.ForeignKey(
         Curator,
         related_name='curatordirections',
-        on_delete=models.CASCADE, )
+        on_delete=models.CASCADE,
+    )
 
     def __str__(self):
         return f'{self.name_dir}'
 
 
 class Groups(models.Model):
-    name = models.CharField(max_length=150)
-    num_groups = models.CharField(max_length=15, validators=[NUMBER_REGEX])
+    group_name = models.CharField(
+        max_length=150,
+    )
+    group_number = models.CharField(
+        max_length=15,
+        validators=[NUMBER_REGEX],
+    )
     max_number_students = models.IntegerField(
         default=20,
         validators=[MaxValueValidator(20), MinValueValidator(1)],
-        help_text='Количество студентов в группе не может быть меньше 1-го и больше 20-ти',
+        help_text='Количество студентов в группе '
+                  'не может быть меньше 1-го и больше 20-ти',
     )
-    curator = models.ForeignKey(
-        Curator,
-        on_delete=models.CASCADE,
-        related_name='curatorgroups')
-    disciplines = models.ManyToManyField(
-        "Discipline",
-        related_name='groupsdisciplines',
-        verbose_name='Изучаемые дисциплины'
-    )
+
     direction = models.ForeignKey(
         Direction,
         on_delete=models.CASCADE,
-        related_name='groupsdirection',
-        verbose_name='Изучаемые дисциплины'
+        related_name='group',
+        verbose_name='Изучаемые дисциплины',
     )
 
 
 
     def __str__(self):
-        return self.name
+        return self.group_name
 
 
 
@@ -81,19 +93,29 @@ class Students(models.Model):
         ('M', "Male"),
         ('F', "Female"),
     ]
-    first_name = models.CharField(max_length=150, verbose_name='Фамилия')
-    middle_name = models.CharField(max_length=150, verbose_name='Имя')
-    last_name = models.CharField(max_length=150, verbose_name='Отчество')
+    first_name = models.CharField(
+        max_length=150,
+        verbose_name='Фамилия',
+    )
+    middle_name = models.CharField(
+        max_length=150,
+        verbose_name='Имя',
+    )
+    last_name = models.CharField(
+        max_length=150,
+        verbose_name='Отчество',
+    )
     gender = models.CharField(
         max_length=1,
         choices=GENDER_CHOICES,
-        default="None",
-        verbose_name='Пол'
+        null=True,
+        verbose_name='Пол',
     )
     group = models.ForeignKey(
         Groups,
         on_delete=models.CASCADE,
-        related_name='studygroup')
+        related_name='students',
+    )
 
     class Meta:
         ordering = ['first_name', ]
@@ -102,11 +124,14 @@ class Students(models.Model):
 
 
 class Discipline(models.Model):
-    name_dis = models.CharField(max_length=150, )
+    name_dis = models.CharField(
+        max_length=150,
+    )
     direction = models.ForeignKey(
         Direction,
         on_delete=models.CASCADE,
-        related_name='directiondisciplines')
+        related_name='directiondisciplines',
+    )
 
     def __str__(self):
         return f'{self.name_dis}'
@@ -121,9 +146,17 @@ class MyReport(models.Model):
         (DURING, 'during'),
         (DONE, 'done'),
     )
-    file_name = models.CharField(max_length=150, verbose_name='Имя отчёта')
-    datatime_created = models.DateTimeField(auto_now_add=True, )
-    rep_status = models.IntegerField(default=NOT_STARTED, choices=PROCESS_CHOICES)
+    file_name = models.CharField(
+        max_length=150,
+        verbose_name='Имя отчёта',
+    )
+    datatime_created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    rep_status = models.IntegerField(
+        default=NOT_STARTED,
+        choices=PROCESS_CHOICES,
+    )
 
     def __str__(self):
         return f'{self.file_name}'

@@ -63,18 +63,6 @@ class GroupsAPIListDetail(
     pagination_class = APIListPagination
 
 
-# class RepGroupsAPIListDetail(
-#     viewsets.ModelViewSet
-# ):
-#     queryset = Groups.objects.annotate(
-#         free_place=20 - Count('student'),
-#         num_student=Count('student'),
-#         num_student_f=Count('student', filter=Q(student__gender='F')),
-#         num_student_m=Count('student', filter=Q(student__gender='M')),
-#     )
-#     serializer_class = RepGroupsSerializer
-#     permission_classes = (IsAdminOrReadOnly,)
-#     pagination_class = APIListPagination
 
 
 class RepGroupsAPIListDetail(
@@ -82,10 +70,10 @@ class RepGroupsAPIListDetail(
 ):
     queryset = Groups.objects.select_related('direction__curator').\
         annotate(
-        free_place=20 - Count('studygroup'),
-        num_student=Count('studygroup'),
-        num_student_f=Count('studygroup', filter=Q(studygroup__gender='F')),
-        num_student_m=Count('studygroup', filter=Q(studygroup__gender='M')),)
+        free_place=20 - Count('students'),
+        num_student=Count('students'),
+        num_student_f=Count('students', filter=Q(students__gender='F')),
+        num_student_m=Count('students', filter=Q(students__gender='M')),)
 
     serializer_class = RepGroupsSerializer
     permission_classes = (IsAdminOrReadOnly,)
