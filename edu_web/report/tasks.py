@@ -16,7 +16,7 @@ def report_create(*args, **kwargs,):
     logger.info('Проверка')
     logger.info(str(kwargs) + str(args))
     from edu_web.models import Students
-    from edu_web.models import MyReport
+    from edu_web.report.models_rep import MyReport
     task = MyReport.objects.get()
     task.rep_status = 0
     task.save()

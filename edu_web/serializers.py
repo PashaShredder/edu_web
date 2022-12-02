@@ -50,14 +50,14 @@ class RepDirectionSerializer(serializers.ModelSerializer):
         fields = ('name_dir', 'directiondisciplines', 'curator',)
 
 
-class RepGroupsSerializer(serializers.ModelSerializer):
-    group_name = serializers.CharField()
-    direction = RepDirectionSerializer(read_only=True)
-    student = StudentsSerializer(read_only=True)
-    students = serializers.SlugRelatedField(slug_field='first_name', read_only=True, many=True)
-    group = serializers.SlugRelatedField(slug_field='name', read_only=True)
-
-    class Meta:
-        model = Groups
-        fields = '__all__'
-
+# class RepGroupsSerializer(serializers.ModelSerializer):
+#     group_name = serializers.CharField()
+#     direction = RepDirectionSerializer(read_only=True)
+#     student = StudentsSerializer(read_only=True)
+#     students = serializers.SlugRelatedField(slug_field='first_name', read_only=True, many=True)
+#     group = serializers.SlugRelatedField(slug_field='name', read_only=True)
+#
+#     class Meta:
+#         model = Groups
+#         fields = '__all__'
+#

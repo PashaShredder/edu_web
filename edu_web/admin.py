@@ -1,5 +1,6 @@
 from django.contrib import admin
-from edu_web.models import Students, Curator, Discipline, Direction, Groups, MyReport
+from edu_web.models import Students, Curator, Discipline, Direction, Groups
+from edu_web.report.models_rep import MyReport
 
 
 class DirectionAdmin(admin.ModelAdmin):
