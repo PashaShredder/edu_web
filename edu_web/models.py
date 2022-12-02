@@ -26,14 +26,19 @@ class Curator(models.Model):
         null=False,
         validators=[PHONE_REGEX],
         help_text='Формат ввода номера +7',
+        verbose_name='Телефон куратора'
 
     )
-    mail_address = models.EmailField(blank=True)
+    mail_address = models.EmailField(
+        blank=True,
+        verbose_name='Электронная почта куратора'
+    )
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='curatoruser',
         blank=True,
+        verbose_name='Пользователь'
     )
     def __str__(self):
         return f'{self.first_name} {self.middle_name} {self.last_name}'
@@ -42,12 +47,13 @@ class Curator(models.Model):
 class Direction(models.Model):
     name_dir = models.CharField(
         max_length=150,
-        verbose_name='Направление',
+        verbose_name='Направление подготовки',
     )
     curator = models.ForeignKey(
         Curator,
         related_name='curatordirections',
         on_delete=models.CASCADE,
+        verbose_name='Куратор направления',
     )
 
     def __str__(self):
@@ -57,16 +63,19 @@ class Direction(models.Model):
 class Groups(models.Model):
     group_name = models.CharField(
         max_length=150,
+        verbose_name='Шыфр группы',
     )
     group_number = models.CharField(
         max_length=15,
         validators=[NUMBER_REGEX],
+        verbose_name='№ группы'
     )
     max_number_students = models.IntegerField(
         default=20,
         validators=[MaxValueValidator(20), MinValueValidator(1)],
         help_text='Количество студентов в группе '
                   'не может быть меньше 1-го и больше 20-ти',
+        verbose_name='Максимальное наполнение группы'
     )
 
     direction = models.ForeignKey(
@@ -110,6 +119,7 @@ class Students(models.Model):
         Groups,
         on_delete=models.CASCADE,
         related_name='students',
+        verbose_name='Группа студента'
     )
 
     class Meta:
@@ -121,11 +131,14 @@ class Students(models.Model):
 class Discipline(models.Model):
     name_dis = models.CharField(
         max_length=150,
+        verbose_name='Название дисциплины'
     )
     direction = models.ForeignKey(
         Direction,
         on_delete=models.CASCADE,
         related_name='directiondisciplines',
+        verbose_name='Направление подготовки'
+
     )
 
     def __str__(self):
