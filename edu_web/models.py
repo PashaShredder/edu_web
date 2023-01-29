@@ -4,7 +4,7 @@ from django.db import models
 
 NUMBER_REGEX = RegexValidator(r'^[a-zA-Z0-9]*$', 'Разрешены только буквенно-цифровые символы')
 PHONE_REGEX = RegexValidator(r'^\+?7?\d{9,15}$', "Номер телефона необходимо вводить в формате "
-                                                 "«+7------». Допускается до 15 цифр")
+                                                 "«+3------». Допускается до 15 цифр")
 
 
 class Curator(models.Model):
@@ -25,7 +25,7 @@ class Curator(models.Model):
         blank=False,
         null=False,
         validators=[PHONE_REGEX],
-        help_text='Формат ввода номера +7',
+        help_text='Формат ввода номера +3',
         verbose_name='Телефон куратора'
 
     )
